@@ -6,6 +6,15 @@
             [brain-gain-or-drain [entity :refer :all]
                                  [domain :refer :all]]))
 
+(defn move-entity
+  [delta-time logo]
+  (let [delta-x (* 4 60 delta-time)]
+    (assoc logo :x (-> (:x logo) (- delta-x)))))
+
+(defn move-entities
+  [delta-time entities]
+  (mapv #(move-entity delta-time %) entities))
+
 (defscreen game-screen
   :on-show
   (fn [screen entities]
@@ -24,6 +33,7 @@
     (clear!)
     (->> entities
          (bind-entities (:resources screen))
+         (move-entities (:delta-time screen))
          (render! screen)))
 
   :on-resize
