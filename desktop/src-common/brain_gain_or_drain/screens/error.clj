@@ -1,37 +1,38 @@
 (ns brain-gain-or-drain.screens.error
-  (:require [play-clj [core :refer :all]
-                      [ui :refer :all]]))
+  (:refer-clojure :exclude [bound?])
+  (:require [play-clj.core :refer :all]
+            [brain-gain-or-drain.entity :refer :all]))
 
 (defn- layout
   [screen-width screen-height entities]
   (for [entity entities]
-    (cond
-     (label? entity) (let [bounds (label! entity :get-text-bounds)
-                           width (. bounds width)
-                           height (. bounds height)]
-                       (assoc entity
-                              :x (-> screen-width
-                                     (- width)
-                                     (/ 2))
-                              :y (-> screen-height
-                                     (- height)
-                                     (/ 2))))
-     :else entity)))
+    (case (:type entity)
+      :error-message (assoc entity
+                            :x (-> screen-width
+                                   (- (:width entity))
+                                   (/ 2))
+                            :y (-> screen-height
+                                   (- (:height entity))
+                                   (/ 2)))
+      entity)))
 
 (defscreen error-screen
   :on-show
   (fn [screen entities]
     (update! screen
              :camera (orthographic)
-             :renderer (stage))
-    (label "I'm sorry Dave,\nI'm afraid I can't do that."
-           (color :white)
-           :set-alignment (align :center)))
+             :renderer (stage)
+             :resources
+             {
+              :error-message "I'm sorry Dave,\nI'm afraid I can't do that."
+             })
+    [{:type :error-message :color :white :align :center}])
 
   :on-render
   (fn [screen entities]
     (clear! 0.75 0 0 1)
     (->> entities
+         (bind-entities (:resources screen))
          (layout (stage! screen :get-width)
                  (stage! screen :get-height))
          (render! screen)))
