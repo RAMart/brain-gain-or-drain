@@ -1,8 +1,21 @@
 (ns brain-gain-or-drain.core
+  (:refer-clojure :exclude [set-error-handler!])
   (:require [play-clj.core :refer :all]
-            [brain-gain-or-drain.screens.error :refer [error-screen]]))
+            [brain-gain-or-drain.screens [error :refer [error-screen]]
+                                         [game :refer [game-screen]]
+                                         [overlay :refer [overlay-screen]]]))
+
+(defn- set-error-handler!
+  [game]
+  (set-screen-wrapper!
+   (fn [_ screen-fn]
+     (try (screen-fn)
+          (catch Exception e
+            (.printStackTrace e)
+            (set-screen! game error-screen))))))
 
 (defgame brain-gain-or-drain-game
   :on-create
   (fn [this]
-    (set-screen! this error-screen)))
+    (set-error-handler! this)
+    (set-screen! this game-screen overlay-screen)))

@@ -5,8 +5,12 @@
             [play-clj [core :refer :all]
                       [repl :refer :all]]
             [brain-gain-or-drain [entity :refer :all]
+                                 [domain :refer :all]
+                                 [utils :refer :all]
                                  [core :refer :all]]
-            [brain-gain-or-drain.screens.error :refer [error-screen]]))
+            [brain-gain-or-drain.screens [error :refer [error-screen]]
+                                         [game :refer :all]
+                                         [overlay :refer [overlay-screen]]]))
 
 (defn- purify-entities
   [entities]
@@ -21,7 +25,7 @@
 
 (defn restart-game!
   []
-  (show-screen! error-screen))
+  (show-screen! game-screen overlay-screen))
 
 (defn pprint-entities
   ([screen]
