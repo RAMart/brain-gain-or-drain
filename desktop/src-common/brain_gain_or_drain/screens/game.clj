@@ -15,6 +15,12 @@
   [delta-time entities]
   (mapv #(move-entity delta-time %) entities))
 
+(defn recreate-entity
+  [entity width height]
+  (assoc entity
+         :x width
+         :y (rand-int height)))
+
 (defscreen game-screen
   :on-show
   (fn [screen entities]
@@ -31,10 +37,13 @@
   :on-render
   (fn [screen entities]
     (clear!)
-    (->> entities
-         (bind-entities (:resources screen))
-         (move-entities (:delta-time screen))
-         (render! screen)))
+    (letfn [(recreate-entity-on-screen [entity]
+              (recreate-entity entity (width screen) (height screen)))]
+      (->> entities
+           (bind-entities (:resources screen))
+           (move-entities (:delta-time screen))
+           (when-entity gone? recreate-entity-on-screen)
+           (render! screen))))
 
   :on-resize
   (fn [screen entities]
