@@ -13,8 +13,12 @@
     (assoc logo :x (-> logo :x (- delta-x)))))
 
 (defn move-player
-  [delta-time game-input player]
-  player)
+  [delta-time move-direction player]
+  (let [delta-y (* 6 60 delta-time)]
+    (case move-direction
+      :move-up (assoc player :y (-> player :y (+ delta-y)))
+      :move-down (assoc player :y (-> player :y (- delta-y)))
+      player)))
 
 (defn move-entity
   [delta-time game-input entity]
