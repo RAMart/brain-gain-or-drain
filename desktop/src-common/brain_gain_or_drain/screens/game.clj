@@ -46,11 +46,11 @@
       (letfn [(recreate-entity-on-screen [entity]
                 (recreate-entity entity (width screen) (height screen)))
               (eaten-by-players? [entity]
-                (some #([player] (eaten-by? player entity)) players))]
+                (some (fn [player] (eaten-by? player entity)) players))]
         (->> entities
              (move-entities (:delta-time screen) (game-input!))
              (when-entity gone? recreate-entity-on-screen)
-             (when-entity eaten-by-player? recreate-entity-on-screen)
+             (when-entity eaten-by-players? recreate-entity-on-screen)
              (render! screen)))))
 
   :on-resize
