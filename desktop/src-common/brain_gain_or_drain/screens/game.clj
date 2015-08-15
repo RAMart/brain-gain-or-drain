@@ -9,7 +9,7 @@
 (defn move-entity
   [delta-time logo]
   (let [delta-x (* 4 60 delta-time)]
-    (assoc logo :x (-> (:x logo) (- delta-x)))))
+    (assoc logo :x (-> logo :x (- delta-x)))))
 
 (defn move-entities
   [delta-time entities]

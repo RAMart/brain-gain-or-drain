@@ -39,4 +39,4 @@
 
   :on-resize
   (fn [screen entities]
-    (width! screen (-> (game :width) (/ 2)))))
+    (width! screen (-> :width game (/ 2)))))

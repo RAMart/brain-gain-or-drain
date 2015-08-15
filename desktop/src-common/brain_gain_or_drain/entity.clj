@@ -156,7 +156,7 @@
   (bind-texture entity
                 (aget ((:type entity) resources)
                       0
-                      (-> (:z entity) (or 0)))))
+                      (-> entity :z (or 0)))))
 
 (defmethod bind-entity :image
   [entity resources]
@@ -166,9 +166,9 @@
 (defmethod bind-entity :label
   [entity resources]
   (bind-label entity
-              (-> (:text entity) (or ((:type entity) resources)))
-              (-> (:color entity) (or :white))
-              (-> (:align entity) (or :left))))
+              (-> entity :text (or ((:type entity) resources)))
+              (-> entity :color (or :white))
+              (-> entity :align (or :left))))
 
 (defmethod bind-entity :music
   [entity resources]
