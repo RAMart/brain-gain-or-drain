@@ -5,7 +5,8 @@
                       [utils :as u]]
             [brain-gain-or-drain [entity :refer :all]
                                  [domain :refer :all]
-                                 [input :refer :all]]))
+                                 [input :refer :all]]
+            [brain-gain-or-drain.screens.utils :refer :all]))
 
 (load "game_mechanics")
 
@@ -28,6 +29,7 @@
     (update! screen
              :camera (orthographic)
              :renderer (stage)
+             :timeline []
              :resources
              {
               :player (texture "brain.png")
@@ -41,14 +43,15 @@
   :on-render
   (fn [screen entities]
     (clear!)
-    (let [entities (bind-entities (:resources screen) entities)
+    (let [screen (limit-timetravel! screen)
+          entities (bind-entities (:resources screen) entities)
           players (filter player? entities)]
       (letfn [(recreate-entity-on-screen [entity]
                 (recreate-entity entity (width screen) (height screen)))
               (eaten-by-players? [entity]
                 (some (fn [player] (eaten-by? player entity)) players))]
         (->> entities
-             (move-entities (:delta-time screen) (game-input!))
+             (move-entities screen (game-input!))
              (when-entity gone? recreate-entity-on-screen)
              (when-entity eaten-by-players? recreate-entity-on-screen)
              (render! screen)))))

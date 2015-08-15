@@ -1,5 +1,14 @@
 (in-ns 'brain-gain-or-drain.screens.game)
 
+(defn- move-back-in-time
+  [screen entities destination-reached-fn]
+  (let [delta-game-time 1/2
+        delta-frames (int (* delta-game-time (game :fps)))]
+    (if (< delta-frames (count (:timeline screen)))
+      (destination-reached-fn delta-game-time
+                              (rewind! screen delta-frames))
+      entities)))
+
 (defmulti move-entity
   (fn [_ _ entity] (:type entity)))
 
@@ -22,6 +31,26 @@
   (println "WARNING: Don't know how to handle (move-entity" delta-time game-input entity ")")
   entity)
 
-(defn move-entities
-  [delta-time game-input entities]
-  (mapv #(move-entity delta-time game-input %) entities))
+(defmulti move-entities
+  (fn [_ game-input _]
+    (case game-input
+      :move-back-in-time :back-in-time
+      :travel-back-in-time :time-traveling
+      :in-space)))
+
+(defmethod move-entities :back-in-time
+  [screen game-input entities]
+  (move-back-in-time screen entities
+                     (fn [delta-game-time past-entities]
+                       past-entities)))
+
+(defmethod move-entities :time-traveling
+  [screen game-input entities]
+  (move-back-in-time screen entities
+                     (fn [_ past-entities]
+                       (concat (remove player? past-entities)
+                               (filter player? entities)))))
+
+(defmethod move-entities :in-space
+  [screen move-direction entities]
+  (mapv #(move-entity (:delta-time screen) move-direction %) entities))
