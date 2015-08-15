@@ -42,10 +42,11 @@
   (fn [screen entities]
     (clear!)
     (let [entities (bind-entities (:resources screen) entities)
-          player (first (filter player? entities))
-          eaten-by-player? (partial eaten-by? player)]
+          players (filter player? entities)]
       (letfn [(recreate-entity-on-screen [entity]
-                (recreate-entity entity (width screen) (height screen)))]
+                (recreate-entity entity (width screen) (height screen)))
+              (eaten-by-players? [entity]
+                (some #([player] (eaten-by? player entity)) players))]
         (->> entities
              (move-entities (:delta-time screen) (game-input!))
              (when-entity gone? recreate-entity-on-screen)
