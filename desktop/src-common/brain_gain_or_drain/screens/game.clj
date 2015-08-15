@@ -21,6 +21,13 @@
          :x width
          :y (rand-int height)))
 
+(defn sprite-generator
+  [template max-x max-y]
+  (repeatedly (fn []
+                (merge template
+                       {:x (rand-int max-x)
+                        :y (rand-int max-y)}))))
+
 (defscreen game-screen
   :on-show
   (fn [screen entities]
