@@ -4,7 +4,8 @@
                       [g2d :refer :all]
                       [utils :as u]]
             [brain-gain-or-drain [entity :refer :all]
-                                 [domain :refer :all]]))
+                                 [domain :refer :all]
+                                 [input :refer :all]]))
 
 (defn move-logo
   [delta-time _ logo]
@@ -65,7 +66,7 @@
               (recreate-entity entity (width screen) (height screen)))]
       (->> entities
            (bind-entities (:resources screen))
-           (move-entities (:delta-time screen) :move-not)
+           (move-entities (:delta-time screen) (game-input!))
            (when-entity gone? recreate-entity-on-screen)
            (render! screen))))
 
