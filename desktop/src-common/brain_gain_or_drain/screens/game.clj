@@ -35,18 +35,22 @@
              })
     [(take 20 (sprite-generator {:type :logo :z 2} (width screen) (height screen)))
      (take 15 (sprite-generator {:type :logo :z 1} (width screen) (height screen)))
-     (take 10 (sprite-generator {:type :logo :z 0} (width screen) (height screen)))])
+     (take 10 (sprite-generator {:type :logo :z 0} (width screen) (height screen)))
+     {:type :player :x 32 :y 100 :z 0}])
 
   :on-render
   (fn [screen entities]
     (clear!)
-    (letfn [(recreate-entity-on-screen [entity]
-              (recreate-entity entity (width screen) (height screen)))]
-      (->> entities
-           (bind-entities (:resources screen))
-           (move-entities (:delta-time screen) (game-input!))
-           (when-entity gone? recreate-entity-on-screen)
-           (render! screen))))
+    (let [entities (bind-entities (:resources screen) entities)
+          player (first (filter player? entities))
+          eaten-by-player? (partial eaten-by? player)]
+      (letfn [(recreate-entity-on-screen [entity]
+                (recreate-entity entity (width screen) (height screen)))]
+        (->> entities
+             (move-entities (:delta-time screen) (game-input!))
+             (when-entity gone? recreate-entity-on-screen)
+             (when-entity eaten-by-player? recreate-entity-on-screen)
+             (render! screen)))))
 
   :on-resize
   (fn [screen entities]
