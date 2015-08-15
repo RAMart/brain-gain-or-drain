@@ -1,12 +1,15 @@
 (in-ns 'brain-gain-or-drain.screens.game)
 
-(defn move-logo
+(defmulti move-entity
+  (fn [_ _ entity] (:type entity)))
+
+(defmethod move-entity :logo
   [delta-time _ logo]
   (let [delta-x (-> (* 4 60 delta-time)
                     (/ (inc (:z logo))))]
     (assoc logo :x (-> logo :x (- delta-x)))))
 
-(defn move-player
+(defmethod move-entity :player
   [delta-time move-direction player]
   (let [delta-y (* 6 60 delta-time)]
     (case move-direction
@@ -14,11 +17,10 @@
       :move-down (assoc player :y (-> player :y (- delta-y)))
       player)))
 
-(defn move-entity
+(defmethod move-entity :default
   [delta-time game-input entity]
-  (cond (logo? entity) (move-logo delta-time game-input entity)
-        (player? entity) (move-player delta-time game-input entity)
-        :else entity))
+  (println "WARNING: Don't know how to handle (move-entity" delta-time game-input entity ")")
+  entity)
 
 (defn move-entities
   [delta-time game-input entities]
