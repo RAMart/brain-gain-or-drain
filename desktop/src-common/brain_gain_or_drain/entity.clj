@@ -4,7 +4,7 @@
                       [ui :refer :all :exclude [align]]
                       [utils :as u]]
             [brain-gain-or-drain.utils :refer :all])
-  (:import com.badlogic.gdx.scenes.scene2d.utils.Align
+  (:import com.badlogic.gdx.utils.Align
            com.badlogic.gdx.graphics.Color))
 
 (defn bound?
@@ -85,7 +85,7 @@
 (defn- update-text-and-bounds!
   [label-entity text]
   (label! label-entity :set-text text)
-  (let [label-bounds (label! label-entity :get-text-bounds)
+  (let [label-bounds (label! label-entity :get-glyph-layout)
         text-based-properties {:text text
                                :width (. label-bounds width)
                                :height (. label-bounds height)}]
