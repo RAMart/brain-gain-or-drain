@@ -7,24 +7,24 @@
                                  [domain :refer :all]]))
 
 (defn move-logo
-  [delta-time logo]
+  [delta-time _ logo]
   (let [delta-x (-> (* 4 60 delta-time)
                     (/ (inc (:z logo))))]
     (assoc logo :x (-> logo :x (- delta-x)))))
 
 (defn move-player
-  [delta-time player]
+  [delta-time game-input player]
   player)
 
 (defn move-entity
-  [delta-time entity]
-  (cond (logo? entity) (move-logo delta-time entity)
-        (player? entity) (move-player delta-time entity)
+  [delta-time game-input entity]
+  (cond (logo? entity) (move-logo delta-time game-input entity)
+        (player? entity) (move-player delta-time game-input entity)
         :else entity))
 
 (defn move-entities
-  [delta-time entities]
-  (mapv #(move-entity delta-time %) entities))
+  [delta-time game-input entities]
+  (mapv #(move-entity delta-time game-input %) entities))
 
 (defn recreate-entity
   [entity width height]
@@ -61,7 +61,7 @@
               (recreate-entity entity (width screen) (height screen)))]
       (->> entities
            (bind-entities (:resources screen))
-           (move-entities (:delta-time screen))
+           (move-entities (:delta-time screen) :move-not)
            (when-entity gone? recreate-entity-on-screen)
            (render! screen))))
 
