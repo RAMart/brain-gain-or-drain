@@ -6,11 +6,21 @@
             [brain-gain-or-drain [entity :refer :all]
                                  [domain :refer :all]]))
 
-(defn move-entity
+(defn move-logo
   [delta-time logo]
   (let [delta-x (-> (* 4 60 delta-time)
                     (/ (inc (:z logo))))]
     (assoc logo :x (-> logo :x (- delta-x)))))
+
+(defn move-player
+  [delta-time player]
+  player)
+
+(defn move-entity
+  [delta-time entity]
+  (cond (logo? entity) (move-logo delta-time entity)
+        (player? entity) (move-player delta-time entity)
+        :else entity))
 
 (defn move-entities
   [delta-time entities]
