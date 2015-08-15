@@ -40,7 +40,9 @@
               :player (texture "brain.png")
               :logo (texture! (texture "clojure-logos.png") :split 64 64)
              })
-    [])
+    [(take 20 (sprite-generator {:type :logo :z 2} (width screen) (height screen)))
+     (take 15 (sprite-generator {:type :logo :z 1} (width screen) (height screen)))
+     (take 10 (sprite-generator {:type :logo :z 0} (width screen) (height screen)))])
 
   :on-render
   (fn [screen entities]
