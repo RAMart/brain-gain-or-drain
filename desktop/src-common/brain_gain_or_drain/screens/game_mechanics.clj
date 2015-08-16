@@ -52,5 +52,8 @@
                                (filter player? entities)))))
 
 (defmethod move-entities :in-space
-  [screen move-direction entities]
-  (mapv #(move-entity (:delta-time screen) move-direction %) entities))
+  [screen-or-delta-time move-direction entities]
+  (let [delta-time (if (map? screen-or-delta-time)
+                     (:delta-time screen-or-delta-time)
+                     screen-or-delta-time)]
+    (mapv #(move-entity delta-time move-direction %) entities)))
