@@ -26,6 +26,10 @@
       :move-down (assoc player :y (-> player :y (- delta-y)))
       player)))
 
+(defmethod move-entity :background-music
+  [delta-time game-input entity]
+  entity)
+
 (defmethod move-entity :default
   [delta-time game-input entity]
   (println "WARNING: Don't know how to handle (move-entity" delta-time game-input entity ")")
@@ -42,6 +46,7 @@
   [screen game-input entities]
   (move-back-in-time screen entities
                      (fn [delta-game-time past-entities]
+                       (rewind-music! screen delta-game-time)
                        past-entities)))
 
 (defmethod move-entities :time-traveling

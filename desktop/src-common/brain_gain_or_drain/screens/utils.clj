@@ -1,6 +1,7 @@
 (ns brain-gain-or-drain.screens.utils
   (:require [play-clj.core :refer :all :exclude [audio!]]
-            [brain-gain-or-drain.utils :refer :all]))
+            [brain-gain-or-drain [audio :refer :all]
+                                 [utils :refer :all]]))
 
 (defn show-screen!
   [& new-screens]
@@ -8,6 +9,11 @@
          ;; FIXME: Hard-wired dependency
          @(resolve 'brain-gain-or-drain.core/brain-gain-or-drain-game)
          new-screens))
+
+(defn rewind-music!
+  [{:keys [resources]} delta-time]
+  (let [music-resources (filter music? (vals resources))]
+    (audio! music-resources :rewind delta-time)))
 
 (defn limit-timetravel!
   [screen]

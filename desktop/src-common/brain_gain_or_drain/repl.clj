@@ -10,7 +10,8 @@
                                  [core :refer :all]]
             [brain-gain-or-drain.screens [error :refer [error-screen]]
                                          [title :refer [title-screen]]
-                                         [game :refer :all]]))
+                                         [game :refer :all]
+                                         [overlay :refer [overlay-screen]]]))
 
 (defn- purify-entities
   [entities]
