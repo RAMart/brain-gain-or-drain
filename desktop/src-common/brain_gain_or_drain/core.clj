@@ -2,8 +2,7 @@
   (:refer-clojure :exclude [set-error-handler!])
   (:require [play-clj.core :refer :all]
             [brain-gain-or-drain.screens [error :refer [error-screen]]
-                                         [game :refer [game-screen]]
-                                         [overlay :refer [overlay-screen]]]))
+                                         [title :refer [title-screen]]]))
 
 (defn- set-error-handler!
   [game]
@@ -18,4 +17,4 @@
   :on-create
   (fn [this]
     (set-error-handler! this)
-    (set-screen! this game-screen overlay-screen)))
+    (set-screen! this title-screen)))

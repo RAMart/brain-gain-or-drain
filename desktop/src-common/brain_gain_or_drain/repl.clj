@@ -9,8 +9,8 @@
                                  [utils :refer :all]
                                  [core :refer :all]]
             [brain-gain-or-drain.screens [error :refer [error-screen]]
-                                         [game :refer :all]
-                                         [overlay :refer [overlay-screen]]]))
+                                         [title :refer [title-screen]]
+                                         [game :refer :all]]))
 
 (defn- purify-entities
   [entities]
@@ -25,7 +25,7 @@
 
 (defn restart-game!
   []
-  (show-screen! game-screen overlay-screen))
+  (show-screen! title-screen))
 
 (defn pprint-entities
   ([screen]

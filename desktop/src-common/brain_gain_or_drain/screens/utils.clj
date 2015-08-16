@@ -2,6 +2,13 @@
   (:require [play-clj.core :refer :all :exclude [audio!]]
             [brain-gain-or-drain.utils :refer :all]))
 
+(defn show-screen!
+  [& new-screens]
+  (apply set-screen!
+         ;; FIXME: Hard-wired dependency
+         @(resolve 'brain-gain-or-drain.core/brain-gain-or-drain-game)
+         new-screens))
+
 (defn limit-timetravel!
   [screen]
   (let [current-timeline (:timeline screen)
